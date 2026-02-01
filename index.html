@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trade FX - Professional Forex Trading Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: #0a0e1a;
+            --secondary-bg: #111827;
+            --accent-gold: #ffd700;
+            --accent-blue: #3b82f6;
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --border-color: #1f2937;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #0a0e1a 0%, #1a1f3a 50%, #0a0e1a 100%);
+        }
+
+        .chart-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 14, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--accent-gold), #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo::before {
+            content: "📈";
+            -webkit-text-fill-color: initial;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-gold);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fff, var(--accent-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, var(--accent-gold), #ffed4e);
+            color: #000;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: fadeInUp 0.8s ease 0.4s both;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            padding: 3rem 2rem;
+            background: var(--secondary-bg);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--accent-gold);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Section Styles */
+        section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent-gold);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+
+        /* How It Works */
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .step-card {
+            background: var(--secondary-bg);
+            padding: 2.5rem;
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            transition: transform 0.3s, border-color 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-gold), transparent);
+        }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-gold);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent-gold), #ffed4e);
+            color: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 auto 1.5rem;
+        }
+
+        .step-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .step-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Investment Plans */
+        .plans-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .plan-card {
+            background: var(--secondary-bg);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 2px solid var(--border-color);
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .plan-card.featured {
+            border-color: var(--accent-gold);
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.1);
+        }
+
+        .plan-card.featured::after {
+            content: "POPULAR";
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: var(--accent-gold);
+            color: #000;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .plan-card:hover {
+            border-color: var(--accent-gold);
+            transform: translateY(-5px);
+        }
+
+        .plan-card.featured:hover {
+            transform: scale(1.05) translateY(-5px);
+        }
+
+        .plan-amount {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--accent-gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-commission {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #fff;
+            margin: 1rem 0;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+
+        .plan-features li {
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .plan-features li::before {
+            content: "✓";
+            color: var(--accent-gold);
+            font-weight: bold;
+        }
+
+        .plan-button {
+            width: 100%;
+            padding: 1rem;
+            background: transparent;
+            border: 2px solid var(--accent-gold);
+            color: var(--accent-gold);
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .plan-button:hover {
+            background: var(--accent-gold);
+            color: #000;
+        }
+
+        /* Support Section */
+        .support-section {
+            background: var(--secondary-bg);
+            border-radius: 20px;
+            padding: 4rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .support-section::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,215,0,0.05) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .support-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .support-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .email-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(255,215,0,0.1);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            border: 1px solid var(--accent-gold);
+            margin: 1.5rem 0;
+            font-size: 1.2rem;
+            color: var(--accent-gold);
+        }
+
+        /* Disclaimer */
+        .disclaimer {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .disclaimer h3 {
+            color: #ef4444;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .disclaimer ul {
+            list-style: none;
+            color: var(--text-secondary);
+        }
+
+        .disclaimer li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .disclaimer li::before {
+            content: "⚠";
+            position: absolute;
+            left: 0;
+            color: #ef4444;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--secondary-bg);
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 2rem 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-gold);
+            margin-bottom: 1rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .stats-bar {
+                gap: 2rem;
+            }
+
+            .plan-card.featured {
+                transform: scale(1);
+            }
+
+            .support-section {
+                padding: 2rem;
+            }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div class="bg-animation">
+        <svg class="chart-lines" viewBox="0 0 1200 800" preserveAspectRatio="none">
+            <path d="M0,400 Q300,300 600,400 T1200,400" stroke="#ffd700" fill="none" stroke-width="2"/>
+            <path d="M0,500 Q300,400 600,500 T1200,500" stroke="#3b82f6" fill="none" stroke-width="2"/>
+            <path d="M0,300 Q300,200 600,300 T1200,300" stroke="#ffd700" fill="none" stroke-width="1" opacity="0.5"/>
+        </svg>
+    </div>
+
+    <nav>
+        <div class="nav-container">
+            <div class="logo">Trade FX</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#plans">Investment Plans</a></li>
+                <li><a href="#support">Support</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <h1>Professional Forex Trading Platform</h1>
+        <p>Participate in global forex markets with confidence. Start with just $10 and earn commission-based profits on successful trades.</p>
+        <a href="#plans" class="cta-button">Start Trading Now</a>
+    </section>
+
+    <div class="stats-bar">
+        <div class="stat-item">
+            <div class="stat-number">$10</div>
+            <div class="stat-label">Minimum Deposit</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">75%</div>
+            <div class="stat-label">Max Commission</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Market Access</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Transparent</div>
+        </div>
+    </div>
+
+    <section id="how-it-works">
+        <h2 class="section-title">How It Works</h2>
+        <p class="section-subtitle">Simple steps to start your forex trading journey</p>
+
+        <div class="steps-container">
+            <div class="step-card fade-in">
+                <div class="step-number">1</div>
+                <h3>Contact Support</h3>
+                <p>Reach out to our team via email to express your interest and discuss your investment goals.</p>
+            </div>
+            <div class="step-card fade-in">
+                <div class="step-number">2</div>
+                <h3>Deposit Funds</h3>
+                <p>Make your deposit starting from $10. All deposits are processed manually for security.</p>
+            </div>
+            <div class="step-card fade-in">
+                <div class="step-number">3</div>
+                <h3>Trading Begins</h3>
+                <p>Our expert traders execute trades on your behalf in the global forex markets.</p>
+            </div>
+            <div class="step-card fade-in">
+                <div class="step-number">4</div>
+                <h3>Earn Commission</h3>
+                <p>Receive your commission percentage on profitable trades based on your deposit tier.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="plans">
+        <h2 class="section-title">Investment Plans</h2>
+        <p class="section-subtitle">Choose your deposit level and corresponding profit commission</p>
+
+        <div class="plans-container">
+            <div class="plan-card fade-in">
+                <div class="plan-amount">$10</div>
+                <div style="color: var(--text-secondary);">Minimum Deposit</div>
+                <div class="plan-commission">30%</div>
+                <div style="color: var(--text-secondary);">Commission on Profits</div>
+                <ul class="plan-features">
+                    <li>Entry Level Access</li>
+                    <li>Manual Deposit Processing</li>
+                    <li>Email Support</li>
+                    <li>Weekly Reports</li>
+                </ul>
+                <a href="mailto:tradefx.pk@gmail.com" class="plan-button">Get Started</a>
+            </div>
+
+            <div class="plan-card fade-in">
+                <div class="plan-amount">$20</div>
+                <div style="color: var(--text-secondary);">Deposit</div>
+                <div class="plan-commission">40%</div>
+                <div style="color: var(--text-secondary);">Commission on Profits</div>
+                <ul class="plan-features">
+                    <li>Enhanced Tier</li>
+                    <li>Manual Deposit Processing</li>
+                    <li>Priority Email Support</li>
+                    <li>Weekly Reports</li>
+                </ul>
+                <a href="mailto:tradefx.pk@gmail.com" class="plan-button">Get Started</a>
+            </div>
+
+            <div class="plan-card fade-in">
+                <div class="plan-amount">$40</div>
+                <div style="color: var(--text-secondary);">Deposit</div>
+                <div class="plan-commission">50%</div>
+                <div style="color: var(--text-secondary);">Commission on Profits</div>
+                <ul class="plan-features">
+                    <li>Standard Tier</li>
+                    <li>Manual Deposit Processing</li>
+                    <li>Priority Support</li>
+                    <li>Daily Reports</li>
+                </ul>
+                <a href="mailto:tradefx.pk@gmail.com" class="plan-button">Get Started</a>
+            </div>
+
+            <div class="plan-card fade-in">
+                <div class="plan-amount">$100</div>
+                <div style="color: var(--text-secondary);">Deposit</div>
+                <div class="plan-commission">60%</div>
+                <div style="color: var(--text-secondary);">Commission on Profits</div>
+                <ul class="plan-features">
+                    <li>Premium Tier</li>
+                    <li>Manual Deposit Processing</li>
+                    <li>VIP Support</li>
+                    <li>Real-time Updates</li>
+                </ul>
+                <a href="mailto:tradefx.pk@gmail.com" class="plan-button">Get Started</a>
+            </div>
+
+            <div class="plan-card fade-in">
+                <div class="plan-amount">$500</div>
+                <div style="color: var(--text-secondary);">Deposit</div>
+                <div class="plan-commission">70%</div>
+                <div style="color: var(--text-secondary);">Commission on Profits</div>
+                <ul class="plan-features">
+                    <li>Elite Tier</li>
+                    <li>Manual Deposit Processing</li>
+                    <li>24/7 Priority Support</li>
+                    <li>Real-time Updates</li>
+                </ul>
+                <a href="mailto:tradefx.pk@gmail.com" class="plan-button">Get Started</a>
+            </div>
+
+            <div class="plan-card featured fade-in">
+                <div class="plan-a
